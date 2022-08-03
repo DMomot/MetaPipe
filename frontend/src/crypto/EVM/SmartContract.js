@@ -70,14 +70,62 @@ class SmartContract {
     }
 
     async formHandler(orderData, tokenData){
-       console.log(orderData, tokenData, 'approving erc20 transfer');
-       console.log('creating limit order')
+        console.log(this._address);
 
-       try {
-        await this.swapTokensMatic(orderData)
-       } catch(err) {
-        console.log(err, 'creating limit order error')
-       }
+        // const accounts = await hre.ethers.getSigners(); //  Здесь надо взять адрес кошелька, который подключен к метамаску
+
+        const web3 = new Web3(`http://127.0.0.1:8545/`);
+        const owner = accounts[0].address;
+        const to = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'; // wallet
+        const token = erc20.address // Задеплоенный токен
+        const gas = 21000000 // gas
+        const name = "AwlForwarder" //Название контракта
+        const version = "1" //Версия контракта
+        const chainId = 31100 //ID Hradhat
+        const value = 0;
+        const privateKey = 'ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
+
+        let tokenValue = new BigNumber(1 ** 18);
+        let fnSignatureTransfer = web3.utils.keccak256('transferFrom(address,address,uint256)').substr(0, 10);
+
+        let fnParamsTransfer = web3.eth.abi.encodeParameters(
+            ['address', 'address', 'uint256'],
+            [owner, to, tokenValue]
+        );
+        data = fnSignatureTransfer + fnParamsTransfer.substr(2);
+        data = '0x'
+
+        const nonce = Number(await forwarder.functions.getNonce(owner));
+
+        // -------------------FORWARDREQUEST PARAMETERS------------------- //
+        
+        const ForwardRequest = [
+            { name: 'from', type: 'address' },
+            { name: 'to', type: 'address' },
+            { name: 'value', type: 'uint256' },
+            { name: 'gas', type: 'uint256' },
+            { name: 'nonce', type: 'uint256' },
+            { name: 'data', type: 'bytes' },
+        ];
+
+        // Defining the ForwardRequest data struct values as function of `verifyingContract` address 
+        const buildData = (verifyingContract) => ({
+            primaryType: 'ForwardRequest',
+            types: { EIP712Domain, ForwardRequest },
+            domain: { name, version, chainId, verifyingContract },
+            message: { from: owner, to, value, gas, nonce, data },
+        });
+
+        const forwardRequest = buildData(forwarder.address);
+
+        // -------------------SIGNATURE------------------- //
+        const signature = sigUtil.signTypedData_v4(
+            Buffer.from(privateKey, 'hex'),
+            { data: forwardRequest }
+            ); // Здесь надо подписать не приватником, а кнопкой в метамаске
+        
+        console.assert(ethUtil.toChecksumAddress(owner) == ethUtil.toChecksumAddress(sigUtil.recoverTypedSignature_v4({data: forwardRequest, sig: signature}))); // Assert that the `owner` is equal to the `signer`
+
 
     }
 

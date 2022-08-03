@@ -6,9 +6,7 @@ import {WalletConnectConnectionProvider} from "@rarible/connector-walletconnect"
 import {mapEthereumWallet} from "@rarible/connector-helper";
 import {stringCompare} from "@/utils/string";
 import router from "@/router";
-import {Ethereum} from "@/crypto/helpers";
-import {Networks, ConnectionStore} from '@/crypto/helpers'
-import {AppStorage} from '@/crypto/helpers'
+import {Ethereum, ConnectionStore} from '@/crypto/helpers'
 
 export default {
     controllerClass: null,
@@ -86,13 +84,13 @@ export default {
                         closeTrigger()
                     }
 
-                    const store = AppStorage.getStore()
+                    const store = Ethereum.AppStorage.getStore()
                     store.openWalletConnectQR(uri, closeWrapper)
 
                     // AppStorage.getLandingStore().changeWalletConnectQRState(true, uri, closeWrapper)
                 },
                 close: () => {
-                    const store = AppStorage.getStore()
+                    const store = Ethereum.AppStorage.getStore()
                     store.closeWalletConnectQR({isAutomatic: true})
                     console.log('Success automatic close qrcodeModal trigger (when user scan and accept connect in app)')
                     // AppStorage.getLandingStore().changeWalletConnectQRState(false, '', null, true)
@@ -133,7 +131,7 @@ export default {
                     router.push({name: 'Characters'})
                 }
 
-                let connectedNetworkName = Networks.getNameByChainID(this._connectedOptions.chainId)
+                let connectedNetworkName = Ethereum.getNameByChainID(this._connectedOptions.chainId)
                 const provider = Ethereum.getProvider(this._connectedOptions.provider)
 
                 if(connectedNetworkName !== 'unknown'){
@@ -167,7 +165,7 @@ export default {
                 }
                 else {
                     console.log('try to connect to unsupported network')
-                    // if connecting to unsupported networks not allowed
+                    // if connecting to unsupported Ethereum not allowed
                     this.getConnectedCallbackFunction().forEach(promise => promise.reject())
                     this.clearConnectedCallbackFunctions()
                     this.controllerClass.tryToConnectToUnsupportedNetwork()

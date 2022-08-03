@@ -55,7 +55,6 @@
 <script setup>
     import {useStore} from "@/store/main";
     import {storeToRefs} from "pinia";
-    import {catToFixed} from "@/utils/string";
     import {ConnectionStore} from '@/crypto/helpers'
     const store = useStore()
     const {

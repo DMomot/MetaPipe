@@ -9,13 +9,9 @@ import {
 } from '@1inch/limit-order-protocol';
 
 import {
-    DecentralizedStorage,
-    Formatters,
-    AppStorage,
-    Networks,
+    Ethereum,
     ConnectionStore,
     TokensABI,
-    TokenRoles,
 } from '@/crypto/helpers'
 
 
@@ -68,7 +64,7 @@ class SmartContract {
         // @todo change for real call
         //return 100
         let abi = TokensABI.default.ABI
-        let address = Networks.getSettings(ConnectionStore.getNetwork().name).tokenAddress
+        let address = Ethereum.getSettings(ConnectionStore.getNetwork().name).tokenAddress
         const contract = new Contract(address, abi, this._getProvider())
         console.log("user identity"+ userIdentity)
         try {
@@ -226,8 +222,8 @@ class SmartContract {
 
     
     async approve(amount){
-        let tokenAddress = Networks.getSettings(ConnectionStore.getNetwork().name).tokenAddress
-        const limitOrderAddress = Networks.getSettings(ConnectionStore.getNetwork().name).limitOrderAddress
+        let tokenAddress = Ethereum.getSettings(ConnectionStore.getNetwork().name).tokenAddress
+        const limitOrderAddress = Ethereum.getSettings(ConnectionStore.getNetwork().name).limitOrderAddress
 
         let abi = TokensABI.default.ABI
         let provide = ConnectionStore.getProvider();
@@ -285,7 +281,7 @@ class SmartContract {
                 let abi = TokensABI.default.ABI
                 console.log()
                 if(this._address == null)
-                    this._address = Networks.getSettings(ConnectionStore.getNetwork().name).tokenAddress
+                    this._address = Ethereum.getSettings(ConnectionStore.getNetwork().name).tokenAddress
                 const contract = new Contract(this._address, abi, this._getProvider())
                 resolve(contract)
             })

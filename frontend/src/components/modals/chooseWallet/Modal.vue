@@ -77,7 +77,7 @@
   import {useWalletConnection} from "@/components/helpers/WalletConnect";
   import {ref} from "vue";
   import AppConnector from '@/crypto/AppConnector'
-  import {ConnectorTypes} from '@/crypto/helpers'
+  import {Ethereum} from '@/crypto/helpers'
 
   const {
       isOpen,
@@ -99,7 +99,7 @@
       try{
           isConnecting.value = true
           const selected = selectedWallet.value
-          await (await AppConnector.init(ConnectorTypes.RARIBLE)).connect(selected)
+          await (await AppConnector.init(Ethereum.ConnectorTypes.RARIBLE)).connect(selected)
       }
       catch (e) {
           console.log(e);

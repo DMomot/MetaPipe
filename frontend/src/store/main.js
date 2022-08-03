@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import {catToFixed, stringCompare} from "@/utils/string";
 import ModalController from "@/components/helpers/ModalController";
-import {Networks} from "@/crypto/helpers";
+import {Ethereum} from "@/crypto/helpers";
 
 export const useStore = defineStore('main', {
     state: () => ({
@@ -74,11 +74,11 @@ export const useStore = defineStore('main', {
                     transactionExplorer,
                     accountExplorer,
                     blockExplorer
-                } = Networks.getData(value)
+                } = Ethereum.getData(value)
                 this.explorers.transaction = transactionExplorer
                 this.explorers.account = accountExplorer
                 this.explorers.block = blockExplorer
-                const {store} = Networks.getSettings(value)
+                const {store} = Ethereum.getSettings(value)
                 this.shopURL = store
             }
         }

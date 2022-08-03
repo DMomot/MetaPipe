@@ -1,6 +1,5 @@
 import {stringCompare} from "@/utils/string";
-import * as Networks from '@/crypto/helpers/Networks'
-import AppStorage from '@/crypto/helpers/AppStorage'
+import * as Ethereum from '@/crypto/helpers/Ethereum'
 
 export default {
     network: {
@@ -41,8 +40,8 @@ export default {
             this.providerForENSCheck = null
         }
 
-        AppStorage.getStore().setUserNetworkName(network.name)
-        AppStorage.getStore().setUserIdentity(userIdentity)
+        Ethereum.AppStorage.getStore().setUserNetworkName(network.name)
+        Ethereum.AppStorage.getStore().setUserIdentity(userIdentity)
     },
 
     getProviderForENS(){
@@ -56,7 +55,7 @@ export default {
     setNetwork(name = null, chainId = null){
         this.network.name = name
         this.network.id = chainId
-        AppStorage.getStore().setUserNetworkName(name)
+        Ethereum.AppStorage.getStore().setUserNetworkName(name)
     },
 
     getNetwork(){
@@ -65,7 +64,7 @@ export default {
 
     setUserIdentity(value){
         this.userIdentity = value
-        AppStorage.getStore().setUserIdentity(value)
+        Ethereum.AppStorage.getStore().setUserIdentity(value)
     },
 
     getUserIdentity(){
@@ -113,7 +112,7 @@ export default {
 
 
     isAdmin(){
-        const {adminAddress} = Networks.getSettings(this.getNetwork().name)
+        const {adminAddress} = Ethereum.getSettings(this.getNetwork().name)
         return stringCompare(this.getUserIdentity(), adminAddress)
     }
 }

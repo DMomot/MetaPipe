@@ -44,10 +44,6 @@ export default {
         Ethereum.AppStorage.getStore().setUserIdentity(userIdentity)
     },
 
-    getProviderForENS(){
-        return this.providerForENSCheck
-    },
-
     clearConnection(){
         this.setConnection()
     },

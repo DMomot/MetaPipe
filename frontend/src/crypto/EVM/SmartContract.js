@@ -41,14 +41,6 @@ class SmartContract {
         this.metaData.address = address
     }
 
-    async getObjectForUser(userIdentity){
-        log(`[SmartContract] get contract: ${this._address}, for user: ${userIdentity}`)
-        await this.fetchMetadata()
-        await this.fetchUserBalance(userIdentity)
-        await this.fetchTokensForUser(userIdentity)
-        return this.metaData
-    }
-
     async fetchMetadata(){
         const Contract = await this._getInstance()
         try{

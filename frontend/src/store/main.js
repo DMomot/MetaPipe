@@ -1,6 +1,5 @@
 import {defineStore} from "pinia";
-import {catToFixed, stringCompare} from "@/utils/string";
-import ModalController from "@/components/helpers/ModalController";
+import {catToFixed} from "@/utils/string";
 import {Ethereum} from "@/crypto/helpers";
 
 export const useStore = defineStore('main', {

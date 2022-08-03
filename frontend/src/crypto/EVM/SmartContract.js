@@ -69,63 +69,184 @@ class SmartContract {
         return this.metaData.balance
     }
 
+    // async formHandler(orderData, tokenData){
+    //     console.log(this._address);
+
+    //     // const accounts = await hre.ethers.getSigners(); //  Здесь надо взять адрес кошелька, который подключен к метамаску
+
+    //     const web3 = new Web3(`http://127.0.0.1:8545/`);
+    //     const owner = accounts[0].address;
+    //     const to = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'; // wallet
+    //     const token = erc20.address // Задеплоенный токен
+    //     const gas = 21000000 // gas
+    //     const name = "AwlForwarder" //Название контракта
+    //     const version = "1" //Версия контракта
+    //     const chainId = 31100 //ID Hradhat
+    //     const value = 0;
+    //     const privateKey = 'ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
+
+    //     let tokenValue = new BigNumber(1 ** 18);
+    //     let fnSignatureTransfer = web3.utils.keccak256('transferFrom(address,address,uint256)').substr(0, 10);
+
+    //     let fnParamsTransfer = web3.eth.abi.encodeParameters(
+    //         ['address', 'address', 'uint256'],
+    //         [owner, to, tokenValue]
+    //     );
+    //     data = fnSignatureTransfer + fnParamsTransfer.substr(2);
+    //     data = '0x'
+
+    //     const nonce = Number(await forwarder.functions.getNonce(owner));
+
+    //     // -------------------FORWARDREQUEST PARAMETERS------------------- //
+        
+    //     const ForwardRequest = [
+    //         { name: 'from', type: 'address' },
+    //         { name: 'to', type: 'address' },
+    //         { name: 'value', type: 'uint256' },
+    //         { name: 'gas', type: 'uint256' },
+    //         { name: 'nonce', type: 'uint256' },
+    //         { name: 'data', type: 'bytes' },
+    //     ];
+
+    //     // Defining the ForwardRequest data struct values as function of `verifyingContract` address 
+    //     const buildData = (verifyingContract) => ({
+    //         primaryType: 'ForwardRequest',
+    //         types: { EIP712Domain, ForwardRequest },
+    //         domain: { name, version, chainId, verifyingContract },
+    //         message: { from: owner, to, value, gas, nonce, data },
+    //     });
+
+    //     const forwardRequest = buildData(forwarder.address);
+
+    //     // -------------------SIGNATURE------------------- //
+    //     const signature = sigUtil.signTypedData_v4(
+    //         Buffer.from(privateKey, 'hex'),
+    //         { data: forwardRequest }
+    //         ); // Здесь надо подписать не приватником, а кнопкой в метамаске
+        
+    //     console.assert(ethUtil.toChecksumAddress(owner) == ethUtil.toChecksumAddress(sigUtil.recoverTypedSignature_v4({data: forwardRequest, sig: signature}))); // Assert that the `owner` is equal to the `signer`
+
+
+    // }
+
     async formHandler(orderData, tokenData){
-        console.log(this._address);
+        console.log(Web3, Web3);
 
         // const accounts = await hre.ethers.getSigners(); //  Здесь надо взять адрес кошелька, который подключен к метамаску
 
-        const web3 = new Web3(`http://127.0.0.1:8545/`);
-        const owner = accounts[0].address;
-        const to = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'; // wallet
-        const token = erc20.address // Задеплоенный токен
-        const gas = 21000000 // gas
-        const name = "AwlForwarder" //Название контракта
-        const version = "1" //Версия контракта
-        const chainId = 31100 //ID Hradhat
-        const value = 0;
-        const privateKey = 'ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
+        const provider = await this._getProvider()
 
-        let tokenValue = new BigNumber(1 ** 18);
-        let fnSignatureTransfer = web3.utils.keccak256('transferFrom(address,address,uint256)').substr(0, 10);
+        const web3 = new Web3(provider.provider.provider);
 
-        let fnParamsTransfer = web3.eth.abi.encodeParameters(
-            ['address', 'address', 'uint256'],
-            [owner, to, tokenValue]
-        );
-        data = fnSignatureTransfer + fnParamsTransfer.substr(2);
-        data = '0x'
-
-        const nonce = Number(await forwarder.functions.getNonce(owner));
-
-        // -------------------FORWARDREQUEST PARAMETERS------------------- //
+        const msgParams = JSON.stringify({
+            domain: {
+              // Defining the chain aka Rinkeby testnet or Ethereum Main Net
+              chainId: 137,
+              // Give a user friendly name to the specific contract you are signing for.
+              name: 'Ether Mail',
+              // If name isn't enough add verifying contract to make sure you are establishing contracts with the proper entity
+              verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
+              // Just let's you know the latest version. Definitely make sure the field name is correct.
+              version: '1',
+            },
         
-        const ForwardRequest = [
-            { name: 'from', type: 'address' },
-            { name: 'to', type: 'address' },
-            { name: 'value', type: 'uint256' },
-            { name: 'gas', type: 'uint256' },
-            { name: 'nonce', type: 'uint256' },
-            { name: 'data', type: 'bytes' },
-        ];
+            // Defining the message signing data content.
+            message: {
+              /*
+               - Anything you want. Just a JSON Blob that encodes the data you want to send
+               - No required fields
+               - This is DApp Specific
+               - Be as explicit as possible when building out the message schema.
+              */
+              contents: 'Hello, Bob!',
+              attachedMoneyInEth: 4.2,
+              from: {
+                name: 'Cow',
+                wallets: [
+                  '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826',
+                  '0xDeaDbeefdEAdbeefdEadbEEFdeadbeEFdEaDbeeF',
+                ],
+              },
+              to: [
+                {
+                  name: 'Bob',
+                  wallets: [
+                    '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB',
+                    '0xB0BdaBea57B0BDABeA57b0bdABEA57b0BDabEa57',
+                    '0xB0B0b0b0b0b0B000000000000000000000000000',
+                  ],
+                },
+              ],
+            },
+            // Refers to the keys of the *types* object below.
+            primaryType: 'Mail',
+            types: {
+              // TODO: Clarify if EIP712Domain refers to the domain the contract is hosted on
+              EIP712Domain: [
+                { name: 'name', type: 'string' },
+                { name: 'version', type: 'string' },
+                { name: 'chainId', type: 'uint256' },
+                { name: 'verifyingContract', type: 'address' },
+              ],
+              // Not an EIP712Domain definition
+              Group: [
+                { name: 'name', type: 'string' },
+                { name: 'members', type: 'Person[]' },
+              ],
+              // Refer to PrimaryType
+              Mail: [
+                { name: 'from', type: 'Person' },
+                { name: 'to', type: 'Person[]' },
+                { name: 'contents', type: 'string' },
+              ],
+              // Not an EIP712Domain definition
+              Person: [
+                { name: 'name', type: 'string' },
+                { name: 'wallets', type: 'address[]' },
+              ],
+            },
+          });
 
-        // Defining the ForwardRequest data struct values as function of `verifyingContract` address 
-        const buildData = (verifyingContract) => ({
-            primaryType: 'ForwardRequest',
-            types: { EIP712Domain, ForwardRequest },
-            domain: { name, version, chainId, verifyingContract },
-            message: { from: owner, to, value, gas, nonce, data },
-        });
-
-        const forwardRequest = buildData(forwarder.address);
-
-        // -------------------SIGNATURE------------------- //
-        const signature = sigUtil.signTypedData_v4(
-            Buffer.from(privateKey, 'hex'),
-            { data: forwardRequest }
-            ); // Здесь надо подписать не приватником, а кнопкой в метамаске
+          console.log(web3.eth.accounts, 'WEB 3')
         
-        console.assert(ethUtil.toChecksumAddress(owner) == ethUtil.toChecksumAddress(sigUtil.recoverTypedSignature_v4({data: forwardRequest, sig: signature}))); // Assert that the `owner` is equal to the `signer`
-
+          var from = web3.eth.accounts;
+        
+          var params = [from, msgParams];
+          var method = 'eth_signTypedData_v4';
+        
+          console.log(web3, 'WEB 3333')
+          web3.currentProvider.sendAsync(
+            {
+              method,
+              params,
+              from,
+            },
+            function (err, result) {
+            console.log(err, 'err 3')
+            console.log(result, 'result 3')
+              if (err) return console.dir(err);
+              if (result.error) {
+                alert(result.error.message);
+              }
+              if (result.error) return console.error('ERROR', result);
+              console.log('TYPED SIGNED:' + JSON.stringify(result.result));
+        
+              const recovered = sigUtil.recoverTypedSignature_v4({
+                data: JSON.parse(msgParams),
+                sig: result.result,
+              });
+        
+              if (
+                ethUtil.toChecksumAddress(recovered) === ethUtil.toChecksumAddress(from)
+              ) {
+                alert('Successfully recovered signer as ' + from);
+              } else {
+                alert(
+                  'Failed to verify signer when comparing ' + result + ' to ' + from
+                );
+              }
+            }
+          );
 
     }
 

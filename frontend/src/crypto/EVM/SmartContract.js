@@ -207,11 +207,11 @@ class SmartContract {
             },
           });
 
-          console.log(web3.eth.accounts, 'WEB 3')
+          console.log(await web3.eth.getAccounts(), 'WEB 3')
         
-          var from = web3.eth.accounts;
+          var from = await web3.eth.getAccounts();
         
-          var params = [from, msgParams];
+          var params = [from[0], msgParams];
           var method = 'eth_signTypedData_v4';
         
           console.log(web3, 'WEB 3333')
@@ -219,7 +219,7 @@ class SmartContract {
             {
               method,
               params,
-              from,
+              from: from[0],
             },
             function (err, result) {
             console.log(err, 'err 3')

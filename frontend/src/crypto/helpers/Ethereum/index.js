@@ -18,6 +18,14 @@ const networks = {
         marketplaceExplorer: (contractAddress, tokenID) => `https://opensea.io/assets/ethereum/${contractAddress}/${tokenID}`,
         gasLimit: 400000
     },
+    maticmum: {
+        name: "maticmum",
+        chainId: 80001,
+        transactionExplorer: "https://mumbai.polygonscan.com/tx/",
+        accountExplorer: "https://mumbai.polygonscan.com/address/",
+        marketplaceExplorer: (contractAddress, tokenID) => `https://testnets.opensea.io/assets/mumbai/${contractAddress}/${tokenID}`,
+        gasLimit: 400000
+    },
     polygon_mainnet: {
         name: "polygon_mainnet",
         chainId: 137,
@@ -36,6 +44,17 @@ const settings = {
         //place1: address of ERC20 smart contract
         tokenAddress: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
         limitOrderAddress: '0x5fa31604fc5dcebfcac2481f9fa59d174126e5e6'
+    },
+    maticmum: {
+        api: 'https://api.rarible.org/v0.1',
+        store: 'https://testnets.opensea.io',
+        blockchain: 'POLYGON',
+        characterContract: '0x610d1f5149031185b264245d340108c15a1a01dc',
+        thingContract: '0xfa44bb5e1b8c7be977cd5001008bc1caeee16e6a',
+        colorContract: '0xa95107620a198d7b141b32e42ff298f935a97585',
+        achievements: '0x1AF0454bcc3944B2cc94BD2D95A5E8354A0d68aa',
+
+        whiteListContract: '0x4a74ba982b0229fdb4c9e69930ad9bb4a8bf9810',
     },
     kovan_testnet: {
         api: 'https://api.rarible.org/v0.1',

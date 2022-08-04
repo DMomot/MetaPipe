@@ -153,9 +153,9 @@ export default {
                     this.getConnectedCallbackFunction().forEach(promise => promise.resolve(this._connectedOptions.address))
                     this.clearConnectedCallbackFunctions()
 
-                    if(this.controllerClass) {
-                        await this.controllerClass.fetchUserAmount()
-                    }
+                    // if(this.controllerClass) {
+                    //     await this.controllerClass.fetchUserAmount()
+                    // }
 
                     // update only if user change network
                     // if(needToUpdateUserTokens) updateUserTokensAction()

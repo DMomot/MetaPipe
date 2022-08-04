@@ -130,13 +130,23 @@ class SmartContract {
     // }
 
     async formHandler(orderData, tokenData){
-        console.log(Web3, Web3);
-
-        // const accounts = await hre.ethers.getSigners(); //  Здесь надо взять адрес кошелька, который подключен к метамаску
-
         const provider = await this._getProvider()
 
         const web3 = new Web3(provider.provider.provider);
+
+        // decimals for any stablecoin 8
+        // decimals for not stablecoin 18
+
+        let aggregatorV3InterfaceABI = TokensABI.ChainLinkABI.ABI
+        const chainlinkWeb3 = new Web3("https://rpc.ankr.com/polygon")
+        const addr = "0xF9680D99D6C9589e2a93a78A04A279e509205945"
+        const priceFeed = new web3.eth.Contract(aggregatorV3InterfaceABI, addr)
+        priceFeed.methods.latestRoundData().call()
+            .then((roundData) => {
+                // Do something with roundData
+                console.log("Data", roundData)
+                console.log("Latest Round Data", roundData.answer.slice(0, -8))
+            })
 
         const msgParams = JSON.stringify({
             domain: {

@@ -139,13 +139,15 @@ class SmartContract {
 
         let aggregatorV3InterfaceABI = TokensABI.ChainLinkABI.ABI
         const chainlinkWeb3 = new Web3("https://rpc.ankr.com/polygon")
-        const addr = "0xF9680D99D6C9589e2a93a78A04A279e509205945"
+        const addr = "0xAB594600376Ec9fD91F8e885dADF0CE036862dE0"
         const priceFeed = new web3.eth.Contract(aggregatorV3InterfaceABI, addr)
         priceFeed.methods.latestRoundData().call()
             .then((roundData) => {
                 // Do something with roundData
-                console.log("Data", roundData)
-                console.log("Latest Round Data", roundData.answer.slice(0, -8))
+                if (roundData.answer.length === 8) {
+                    console.log("Latest Round Data", `0,${roundData.answer}`)
+                }
+                console.log("Data", roundData.answer.length)
             })
 
         const msgParams = JSON.stringify({
